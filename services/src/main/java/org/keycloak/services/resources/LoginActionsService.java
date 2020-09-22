@@ -101,7 +101,7 @@ import javax.ws.rs.core.UriBuilderException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Providers;
 import java.net.URI;
-import java.util.Map;
+import java.util.*;
 
 import static org.keycloak.authentication.actiontoken.DefaultActionToken.ACTION_TOKEN_BASIC_CHECKS;
 
@@ -127,6 +127,11 @@ public class LoginActionsService {
     public static final String AUTH_SESSION_ID = "auth_session_id";
     
     public static final String CANCEL_AIA = "cancel-aia";
+
+    // To Enable Guest Login : Environment variable Keys
+    public static final String GUEST_USERNAME_KEY = "keycloak_guest_username";
+    public static final String GUEST_PASSWORD_KEY = "keycloak_guest_password";
+    // END
 
     private RealmModel realm;
 
@@ -293,6 +298,31 @@ public class LoginActionsService {
                 .setSession(session)
                 .setUriInfo(session.getContext().getUri())
                 .setRequest(request);
+
+        // To Enable Guest Login : Guest Login Implementation
+        MultivaluedMap<String, String> requestBody = request.getDecodedFormParameters();
+//        logger.debugv("Request body 1  : {0}", mm);
+
+        List<String> guestLoginCheck = requestBody.get("guestLogin");
+        // Check to use Guest Login
+        if (guestLoginCheck != null && !guestLoginCheck.isEmpty() && guestLoginCheck.equals(Arrays.asList("yes"))) {
+
+            // Fetch Guest Login Details from Environment Variables
+            String guestUser = System.getenv(GUEST_USERNAME_KEY);
+            String guestPassword = System.getenv(GUEST_PASSWORD_KEY);
+            requestBody.get("username").clear();
+            requestBody.get("password").clear();
+            if (guestUser != null && !guestUser.isEmpty() && guestPassword != null && !guestPassword.isEmpty() ) {
+                logger.infov("Using '{0}' and '{1}' from the environment variables to enable Guest Login.", GUEST_USERNAME_KEY, GUEST_PASSWORD_KEY);
+                requestBody.addFirst("username",guestUser);
+                requestBody.addFirst("password",guestPassword);
+            } else {
+                logger.fatalv("Please set the '{0}' and '{1}' in the environment variables to enable Guest Login.", GUEST_USERNAME_KEY, GUEST_PASSWORD_KEY);
+            }
+        }
+//        logger.debugv("Request body 2  : {0}", request.getDecodedFormParameters());
+        // END
+
         if (errorMessage != null) {
             processor.setForwardedErrorMessage(new FormMessage(null, errorMessage));
         }

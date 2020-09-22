@@ -69,9 +69,9 @@ public class RegistrationProfile implements FormAction, FormActionFactory {
             errors.add(new FormMessage(RegistrationPage.FIELD_FIRST_NAME, Messages.MISSING_FIRST_NAME));
         }
 
-        if (Validation.isBlank(formData.getFirst((RegistrationPage.FIELD_LAST_NAME)))) {
-            errors.add(new FormMessage(RegistrationPage.FIELD_LAST_NAME, Messages.MISSING_LAST_NAME));
-        }
+//        if (Validation.isBlank(formData.getFirst((RegistrationPage.FIELD_LAST_NAME)))) {
+//            errors.add(new FormMessage(RegistrationPage.FIELD_LAST_NAME, Messages.MISSING_LAST_NAME));
+//        }
 
         String email = formData.getFirst(Validation.FIELD_EMAIL);
         boolean emailValid = true;
@@ -116,7 +116,10 @@ public class RegistrationProfile implements FormAction, FormActionFactory {
         UserModel user = context.getUser();
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         user.setFirstName(formData.getFirst(RegistrationPage.FIELD_FIRST_NAME));
-        user.setLastName(formData.getFirst(RegistrationPage.FIELD_LAST_NAME));
+        String lastName = formData.getFirst(RegistrationPage.FIELD_LAST_NAME);
+        if(lastName != null && !lastName.isEmpty()) {
+            user.setLastName(formData.getFirst(RegistrationPage.FIELD_LAST_NAME));
+        }
         user.setEmail(formData.getFirst(RegistrationPage.FIELD_EMAIL));
     }
 
