@@ -116,6 +116,9 @@ public class FreeMarkerLoginFormsProvider implements LoginFormsProvider {
 
     protected final Map<String, Object> attributes = new HashMap<>();
 
+    private final String GUEST_LOGIN_ENABLE = "keycloak_guest_enable";
+    String guestLoginEnable = System.getenv(GUEST_LOGIN_ENABLE);
+
     public FreeMarkerLoginFormsProvider(KeycloakSession session, FreeMarkerUtil freeMarker) {
         this.session = session;
         this.freeMarker = freeMarker;
@@ -391,6 +394,13 @@ public class FreeMarkerLoginFormsProvider implements LoginFormsProvider {
         }
         URI baseUriWithCodeAndClientId = baseUriBuilder.build();
 
+        attributes.put("guestLoginAction", false);
+        if(guestLoginEnable !=null && !guestLoginEnable.isEmpty()) {
+            boolean guestLoginCheck =  Boolean.parseBoolean(guestLoginEnable.toLowerCase());
+            if(guestLoginCheck) {
+                attributes.put("guestLoginAction", true);
+            }
+        }
         if (client != null) {
             attributes.put("client", new ClientBean(session, client));
         }

@@ -131,6 +131,10 @@ public class LoginActionsService {
     // To Enable Guest Login : Environment variable Keys
     public static final String GUEST_USERNAME_KEY = "keycloak_guest_username";
     public static final String GUEST_PASSWORD_KEY = "keycloak_guest_password";
+
+    // Fetch Guest Login Details from Environment Variables
+    String guestUser = System.getenv(GUEST_USERNAME_KEY);
+    String guestPassword = System.getenv(GUEST_PASSWORD_KEY);
     // END
 
     private RealmModel realm;
@@ -306,10 +310,6 @@ public class LoginActionsService {
         List<String> guestLoginCheck = requestBody.get("guestLogin");
         // Check to use Guest Login
         if (guestLoginCheck != null && !guestLoginCheck.isEmpty() && guestLoginCheck.equals(Arrays.asList("yes"))) {
-
-            // Fetch Guest Login Details from Environment Variables
-            String guestUser = System.getenv(GUEST_USERNAME_KEY);
-            String guestPassword = System.getenv(GUEST_PASSWORD_KEY);
             requestBody.get("username").clear();
             requestBody.get("password").clear();
             if (guestUser != null && !guestUser.isEmpty() && guestPassword != null && !guestPassword.isEmpty() ) {
