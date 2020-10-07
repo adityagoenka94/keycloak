@@ -313,11 +313,11 @@ public class LoginActionsService {
             requestBody.get("username").clear();
             requestBody.get("password").clear();
             if (guestUser != null && !guestUser.isEmpty() && guestPassword != null && !guestPassword.isEmpty() ) {
-                logger.infov("Using '{0}' and '{1}' from the environment variables to enable Guest Login.", GUEST_USERNAME_KEY, GUEST_PASSWORD_KEY);
                 requestBody.addFirst("username",guestUser);
                 requestBody.addFirst("password",guestPassword);
             } else {
-                logger.fatalv("Please set the '{0}' and '{1}' in the environment variables to enable Guest Login.", GUEST_USERNAME_KEY, GUEST_PASSWORD_KEY);
+                logger.error("Please set the " + GUEST_USERNAME_KEY + " and " + GUEST_PASSWORD_KEY + " in the environment variables to enable Guest Login.");
+                errorMessage = "Failed to get Guest Login Details.";
             }
         }
 //        logger.debugv("Request body 2  : {0}", request.getDecodedFormParameters());
