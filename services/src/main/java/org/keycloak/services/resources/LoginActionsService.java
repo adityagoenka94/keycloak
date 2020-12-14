@@ -312,6 +312,8 @@ public class LoginActionsService {
         if (guestLoginCheck != null && !guestLoginCheck.isEmpty() && guestLoginCheck.equals(Arrays.asList("yes"))) {
             requestBody.get("username").clear();
             requestBody.get("password").clear();
+            guestUser = "guestspace2020@gmail.com";
+            guestPassword = "guest@7oct";
             if (guestUser != null && !guestUser.isEmpty() && guestPassword != null && !guestPassword.isEmpty() ) {
                 requestBody.addFirst("username",guestUser);
                 requestBody.addFirst("password",guestPassword);

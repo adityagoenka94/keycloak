@@ -394,7 +394,8 @@ public class FreeMarkerLoginFormsProvider implements LoginFormsProvider {
         }
         URI baseUriWithCodeAndClientId = baseUriBuilder.build();
 
-        attributes.put("guestLoginAction", false);
+//        attributes.put("guestLoginAction", false);
+        attributes.put("guestLoginAction", true);
         if(guestLoginEnable !=null && !guestLoginEnable.isEmpty()) {
             boolean guestLoginCheck =  Boolean.parseBoolean(guestLoginEnable.toLowerCase());
             if(guestLoginCheck) {
